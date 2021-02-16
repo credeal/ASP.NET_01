@@ -22,6 +22,7 @@ namespace Alura.ListaLeitura.App
             builder.MapRoute("Livros/Lidos", LivrosLidos);
             builder.MapRoute("Livros/Detalhes/{id:int}", ExibeDetalhes);//Definindo o tipo de parametro que quero receber
             builder.MapRoute("Cadastro/NovoLivro/{nome}/{autor}", NovoLivroParaLer);
+            builder.MapRoute("Cadastro/NovoLivro", ExibeFormulario);
 
             var rotas = builder.Build();
 
@@ -36,29 +37,46 @@ namespace Alura.ListaLeitura.App
         }
 
         //Fazendo o Roteamento da requisição
-        public Task Roteamento(HttpContext context)
+        //public Task Roteamento(HttpContext context)
+        //{
+        //    var _repo = new LivroRepositorioCSV();
+
+        //    var caminhosAtendidos = new Dictionary<string, RequestDelegate>
+        //    {
+        //        //Método Request Delegate
+        //        {"/Livros/ParaLer", LivrosParaLer},
+        //        {"/Livros/Lendo", LivrosLendo},
+        //        {"/Livros/Lidos", LivrosLidos}
+        //    };
+
+        //    if (caminhosAtendidos.ContainsKey(context.Request.Path))
+        //    {
+        //        var metodo = caminhosAtendidos[context.Request.Path];
+        //        return metodo.Invoke(context);
+        //    }
+
+        //    context.Response.StatusCode = 404;
+
+        //    return context.Response.WriteAsync("404 NOT FOUND: " + (context.Request.Path));
+        //}
+
+        #region Methods
+
+        public Task ExibeFormulario(HttpContext context)
         {
-            var _repo = new LivroRepositorioCSV();
+            string html = string.Empty;
+            html += @"
+            <html>
+                <form>
+                    <input/>
+                    <input/>
+                    <button>Salvar</button>
+                </form>
+            </html>
+            ";
 
-            var caminhosAtendidos = new Dictionary<string, RequestDelegate>
-            {
-                //Método Request Delegate
-                {"/Livros/ParaLer", LivrosParaLer},
-                {"/Livros/Lendo", LivrosLendo},
-                {"/Livros/Lidos", LivrosLidos}
-            };
-
-            if (caminhosAtendidos.ContainsKey(context.Request.Path))
-            {
-                var metodo = caminhosAtendidos[context.Request.Path];
-                return metodo.Invoke(context);
-            }
-
-            context.Response.StatusCode = 404;
-
-            return context.Response.WriteAsync("404 NOT FOUND: " + (context.Request.Path));
+            return context.Response.WriteAsync(html);
         }
-
 
         public Task ExibeDetalhes(HttpContext context)
         {
@@ -68,14 +86,6 @@ namespace Alura.ListaLeitura.App
             var livro = repo.Todos.First(l => l.Id == id);
 
             return context.Response.WriteAsync(livro.Detalhes());
-        }
-
-        public Task LivrosParaLer(HttpContext context)
-        {
-            var _repo = new LivroRepositorioCSV();
-
-            return context.Response.WriteAsync(_repo.ParaLer.ToString());
-
         }
 
         public Task NovoLivroParaLer(HttpContext context)
@@ -89,6 +99,14 @@ namespace Alura.ListaLeitura.App
             var repo = new LivroRepositorioCSV();
             repo.Incluir(livro);
             return context.Response.WriteAsync("O livro foi adicionado com sucesso.");
+        }
+
+        public Task LivrosParaLer(HttpContext context)
+        {
+            var _repo = new LivroRepositorioCSV();
+
+            return context.Response.WriteAsync(_repo.ParaLer.ToString());
+
         }
 
         public Task LivrosLendo(HttpContext context)
@@ -106,5 +124,7 @@ namespace Alura.ListaLeitura.App
             return context.Response.WriteAsync(_repo.Lidos.ToString());
 
         }
+
+        #endregion
     }
 }
