@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Alura.ListaLeitura.App.Logica
 {
-    public class LivroLogica
+    public class LivroController
     {
         
 

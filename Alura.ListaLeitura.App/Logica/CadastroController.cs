@@ -12,21 +12,15 @@ using System.Threading.Tasks;
 
 namespace Alura.ListaLeitura.App.Logica
 {
-    public class CadastroLogica
+    public class CadastroController
     {
         
 
-        public static Task NovoLivroParaLer(HttpContext context)
+        public string NovoLivroParaLer(Livro livro)
         {
-            var livro = new Livro()
-            {
-                Titulo = context.GetRouteValue("nome").ToString(), //retorna um tipo object
-                Autor = context.GetRouteValue("autor").ToString()
-            };
-
             var repo = new LivroRepositorioCSV();
             repo.Incluir(livro);
-            return context.Response.WriteAsync("O livro foi adicionado com sucesso.");
+            return ("O livro foi adicionado com sucesso.");
         }
 
         public static Task ExibeFormulario(HttpContext context)
